@@ -10,7 +10,8 @@ maybe_fetch() {
     then
         echo "Already in the cache: ${file}"
     else
-        wget "${url}" -O "${file}"
+        echo "Fetching ${url} -> ${file}"
+        wget -q "${url}" -O "${file}"
     fi
 }
 
