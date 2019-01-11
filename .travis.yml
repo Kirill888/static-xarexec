@@ -1,0 +1,20 @@
+language: c
+sudo: required
+
+services:
+  - docker
+
+addons:
+  apt:
+    packages:
+      - docker-ce
+
+before_install:
+  - lsb_release -a
+  - make -v
+  - docker -v
+
+script:
+  - make
+  - ls -l out/
+  - ls -l dl/
