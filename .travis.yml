@@ -2,9 +2,9 @@ language: minimal
 sudo: required
 
 env:
-  - global:
-      - V="0.1.2"
-      - ARCH="amd64"
+  global:
+    - V=0.1.2
+    - ARCH=amd64
 
 services:
   - docker
@@ -13,6 +13,8 @@ addons:
   apt:
     packages:
       - docker-ce
+      - fakeroot
+      - dpkg-dev
 
 script:
   - env
