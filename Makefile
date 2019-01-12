@@ -1,10 +1,10 @@
-all: ./out/static-xarexec.tgz
+all: ./out/xarexec-static.tgz
 
 xarexec-build: docker/Dockerfile docker/build.sh
 	@echo Build docker image
 	@docker build -t $@ --file $< docker/
 
-./out/static-xarexec.tgz: xarexec-build
+./out/xarexec-static.tgz: xarexec-build
 	@mkdir -p out dl
 	@echo Building: $@
 	docker run --rm -v `pwd`/out:/out -v `pwd`/dl:/dl $< /$@

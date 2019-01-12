@@ -1,6 +1,11 @@
 language: minimal
 sudo: required
 
+env:
+  - global:
+      - V="0.1.2"
+      - ARCH="amd64"
+
 services:
   - docker
 
@@ -9,22 +14,20 @@ addons:
     packages:
       - docker-ce
 
-before_install:
-  - lsb_release -a
-  - make -v
-  - docker -v
-
 script:
-  - pwd
+  - env
   - make
-  - ls -l dl/
-  - ls -l out/
+  - ls -l dl/ out/
+  - ./pkg_debian.sh "$V" "$ARCH"
+  - dpkg --info "xarexec-static_${V}_${ARCH}.deb"
 
 deploy:
   provider: releases
   skip_cleanup: true
-  file: out/static-xarexec.tgz
-  api_key:
-    secure: "Q2KXb7XCONRil8Aix+5t0i/BDY9fO080ZXZgBCZ1Ar2A0D5Sqfvg7m9hgOOd1fAwDMDJsMWrinVXbaBkpJHhcZu9P6GuXYpihMI/BMWDJbGeOzFWUDJb3zZCNwt/KlmiS0fvNa462faKsbobYCP9KPVO0N8O0BDjTr29oIVvG17bGVhsS900/4bBHGbd/urIruO8gs6Hc16kZl71PXsjuhPowDCefPS+/tifcg3q727AhlUYvvgDr8CrWYEmlwnnV6pzfTzINHH2XYgHpK1aB/werUp+c/HTQ8cGRM+K0XSb47CXuGSk2hypGdECws7PcK3DG7KiYwoYVntcCyUz7TcXdJ+G7rBy+EuBVQYmsXlTJAb18diVHwINMbE15R/yOraoV2K6+iK7qg+Rw9e4yZ+3RuemLeujv59Xk8ER0pfoOxlp1cBEL+FIzXsQKr2ghMYGxpktXyeSXbhWakIsKqwpEihbrgAORFHa2wmzb+721GHdgMp30OYnHF7Wt80b+oKST/ofwilylUxGvXVJU4cCN7rlHqTc7tCJA5L7n85TC9xFnV+HDSLIiLEvp7bE27pLD8zUkj8ovZHzfClf1vB2B7RCwe713Vrpplc/rY51SbNrQhwK4+dvC8pnzZCxTg7gmiaI2oNnOqMwuM4Vb6/OUw+cII3x69CRc7JpAK0="
+  file:
+    - "out/static-xarexec.tgz"
+    - "xarexec-static_${V}_${ARCH}.deb"
   on:
     tags: true
+  api_key:
+    secure: "Q2KXb7XCONRil8Aix+5t0i/BDY9fO080ZXZgBCZ1Ar2A0D5Sqfvg7m9hgOOd1fAwDMDJsMWrinVXbaBkpJHhcZu9P6GuXYpihMI/BMWDJbGeOzFWUDJb3zZCNwt/KlmiS0fvNa462faKsbobYCP9KPVO0N8O0BDjTr29oIVvG17bGVhsS900/4bBHGbd/urIruO8gs6Hc16kZl71PXsjuhPowDCefPS+/tifcg3q727AhlUYvvgDr8CrWYEmlwnnV6pzfTzINHH2XYgHpK1aB/werUp+c/HTQ8cGRM+K0XSb47CXuGSk2hypGdECws7PcK3DG7KiYwoYVntcCyUz7TcXdJ+G7rBy+EuBVQYmsXlTJAb18diVHwINMbE15R/yOraoV2K6+iK7qg+Rw9e4yZ+3RuemLeujv59Xk8ER0pfoOxlp1cBEL+FIzXsQKr2ghMYGxpktXyeSXbhWakIsKqwpEihbrgAORFHa2wmzb+721GHdgMp30OYnHF7Wt80b+oKST/ofwilylUxGvXVJU4cCN7rlHqTc7tCJA5L7n85TC9xFnV+HDSLIiLEvp7bE27pLD8zUkj8ovZHzfClf1vB2B7RCwe713Vrpplc/rY51SbNrQhwK4+dvC8pnzZCxTg7gmiaI2oNnOqMwuM4Vb6/OUw+cII3x69CRc7JpAK0="
