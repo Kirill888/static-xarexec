@@ -1,0 +1,32 @@
+name: Compile
+
+on: [push]
+
+jobs:
+
+  build:
+ 
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build the Docker image
+      run: |
+        docker build ./docker --tag builder:local
+    - name: Compile
+      run: |
+        mkdir -p out dl
+        docker run --rm \
+           -v $(pwd)/out:/out \
+           -v $(pwd)/dl:/dl \
+           builder:local \
+           /out/xarexec-static.tgz
+        ls -lh ./out
+        tar tzvf ./out/xarexec-static.tgz
+    - name: Make Debian Package
+      env:
+        version: 1.0.3
+        arch: amd64
+      run: |
+        ./pkg_debian.sh $version $arch
+        dpkg --info "xarexec-static_${version}_${arch}.deb"
