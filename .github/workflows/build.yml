@@ -5,9 +5,13 @@ on: [push]
 jobs:
 
   build:
- 
+
     runs-on: ubuntu-latest
- 
+    strategy:
+      matrix:
+        version: ['0.1.3']
+        arch: ['amd64']
+
     steps:
     - uses: actions/checkout@v1
     - name: Build the Docker image
@@ -24,9 +28,21 @@ jobs:
         ls -lh ./out
         tar tzvf ./out/xarexec-static.tgz
     - name: Make Debian Package
-      env:
-        version: 1.0.3
-        arch: amd64
       run: |
         ./pkg_debian.sh $version $arch
         dpkg --info "xarexec-static_${version}_${arch}.deb"
+      env:
+        version: ${{ matrix.version }}
+        arch: ${{ matrix.arch }}
+
+    - name: Upload Artifacts (tgz)
+      uses: actions/upload-artifact@v1
+      with:
+          name: xarexec-static.tgz
+          path: out/xarexec-static.tgz
+
+    - name: Upload Artifacts (deb)
+      uses: actions/upload-artifact@v1
+      with:
+          name: xarexec-static_${{ matrix.version }}_${{ matrix.arch }}.deb 
+          path: xarexec-static_${{ matrix.version }}_${{ matrix.arch }}.deb 
