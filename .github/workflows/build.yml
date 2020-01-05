@@ -1,6 +1,11 @@
 name: Compile
 
-on: [push]
+on:
+  push:
+  pull_request:
+  release:
+    types:
+      - published
 
 jobs:
 
@@ -44,5 +49,27 @@ jobs:
     - name: Upload Artifacts (deb)
       uses: actions/upload-artifact@v1
       with:
-          name: xarexec-static_${{ matrix.version }}_${{ matrix.arch }}.deb 
-          path: xarexec-static_${{ matrix.version }}_${{ matrix.arch }}.deb 
+          name: xarexec-static_${{ matrix.version }}_${{ matrix.arch }}.deb
+          path: xarexec-static_${{ matrix.version }}_${{ matrix.arch }}.deb
+
+    - name: Upload release asset (tgz)
+      uses: actions/upload-release-asset@v1.0.1
+      if: github.event.action == 'published'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./out/xarexec-static.tgz
+        asset_name: xarexec-static.tgz
+        asset_content_type: application/gzip
+
+    - name: Upload release asset (deb)
+      uses: actions/upload-release-asset@v1.0.1
+      if: github.event.action == 'published'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: xarexec-static_${{ matrix.version }}_${{ matrix.arch }}.deb
+        asset_name: xarexec-static_${{ matrix.version }}_${{ matrix.arch }}.deb
+        asset_content_type: application/vnd.debian.binary-package
