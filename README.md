@@ -1,6 +1,6 @@
 # static-xarexec
 
-[![Build Status](https://travis-ci.org/Kirill888/static-xarexec.svg?branch=master)](https://travis-ci.org/Kirill888/static-xarexec)
+[![Build Status](https://github.com/Kirill888/static-xarexec/workflows/build/badge.svg)](https://github.com/Kirill888/static-xarexec/actions)
 
 Docker for building tools needed to create and run python [xar](https://github.com/facebookincubator/xar) files.
 
